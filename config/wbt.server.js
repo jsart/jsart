@@ -5,8 +5,8 @@ const static = require('koa-static');
 const route = require('koa-route');
 const loader = require('loader-koa');
 const render = require('koa-art-template');
-const appMainRoute = require('./route');
-const config = require('./config');
+const appMainRoute = require('./wbt.route');
+const config = require('./wbt.config');
 
 console.log('Please wait while starting the service.');
 

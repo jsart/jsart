@@ -8,8 +8,8 @@ const browserSync = require('browser-sync');
 const del = require('del');
 
 const gulpArt = require('./config/gulp-art');
-const config = require('./config/config');
-const appMainRoute = require('./config/route');
+const config = require('./config/wbt.config');
+const appMainRoute = require('./config/wbt.route');
 
 // 构建build打包使用
 const returnStaticPath = (staticPath, pathType) => {

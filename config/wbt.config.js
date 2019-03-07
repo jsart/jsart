@@ -21,9 +21,8 @@ const config = {
 		file: path.join('dist')
 	},
 	devServer: {
-		host: '192.168.123.194',
-		port: '8084',
-		staticPath: path.join('src')
+		host: 'localhost',
+		port: '8084'
 	}
 };
 module.exports = config;

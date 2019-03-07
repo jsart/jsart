@@ -5,7 +5,7 @@
 	"private": true,
 	"scripts": {
 		"dev:hot": "gulp watch",
-		"dev": "set NODE_ENV=development && node config/server.js",
+		"dev": "set NODE_ENV=development && node config/wbt.server.js",
 		"build": "set NODE_ENV=production && gulp static-pack"
 	},
 	"author": "qckj",
