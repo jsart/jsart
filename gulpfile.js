@@ -1,3 +1,4 @@
+// 引入npm资源
 const path = require('path');
 const gulp = require('gulp');
 const gulpLess = require('gulp-less');
@@ -7,11 +8,12 @@ const gulpNodemon = require('gulp-nodemon');
 const browserSync = require('browser-sync');
 const del = require('del');
 
+// 引入配置文件
 const gulpArt = require('./config/gulp-art');
 const config = require('./config/wbt.config');
 const appMainRoute = require('./config/wbt.route');
 
-// 构建build打包使用
+// 根据配置文件生成静态文件路径
 const returnStaticPath = (staticPath, pathType) => {
 	var nowFile = '/';
 	if (pathType === 'source') {
@@ -22,34 +24,46 @@ const returnStaticPath = (staticPath, pathType) => {
 	return path.join(nowFile, staticPath);
 };
 
-gulp.task('clean-dist', async (cb) => {
-	del([ 'dist/**/*' ], cb);
+// 清理输出文件夹
+gulp.task('clean-dist', (done) => {
+	return del([ config.output.file + '/**/*' ], done);
 });
 
-gulp.task('art', async () => {
+// 编译art模板文+件
+gulp.task('art', () => {
 	const artPath = path.join(config.artTemplate.root, config.fileList.art);
 	const htmlOutPath = path.join(config.output.file, config.fileList.art);
-	gulp.src(artPath + '/*.art').pipe(gulpArt(appMainRoute)).pipe(gulp.dest(htmlOutPath));
+	return gulp.src(artPath + '/*.art').pipe(gulpArt(appMainRoute)).pipe(gulp.dest(htmlOutPath));
 });
 
-gulp.task('less', async () => {
+// 编译less样式为css
+gulp.task('less', () => {
 	const lessPath = returnStaticPath(config.fileList.style, 'source');
 	const cssOutPath = returnStaticPath(config.fileList.style, 'output');
-	gulp.src(lessPath + '/*.less').pipe(gulpLess()).pipe(gulpMinifyCSS()).pipe(gulp.dest(cssOutPath));
+	return gulp.src(lessPath + '/*.less').pipe(gulpLess()).pipe(gulpMinifyCSS()).pipe(gulp.dest(cssOutPath));
 });
 
-gulp.task('script', async () => {
+// 拷贝css样式文件
+gulp.task('css', () => {
+	const cssPath = returnStaticPath(config.fileList.style, 'source');
+	const cssOutPath = returnStaticPath(config.fileList.style, 'output');
+	return gulp.src(cssPath + '/*.css').pipe(gulp.dest(cssOutPath));
+});
+
+// 压缩js文件
+gulp.task('script', () => {
 	const jsPath = returnStaticPath(config.fileList.script, 'source');
 	const jsOutPath = returnStaticPath(config.fileList.script, 'output');
-	gulp.src(jsPath + '/*.js').pipe(gulpUglify()).pipe(gulp.dest(jsOutPath));
+	return gulp.src(jsPath + '/*.js').pipe(gulpUglify()).pipe(gulp.dest(jsOutPath));
 });
 
-gulp.task('static-pack', gulp.series('clean-dist', gulp.parallel('art', 'less', 'script')));
+// 打包
+gulp.task('build', gulp.series('clean-dist', gulp.parallel('art', 'less', 'css', 'script')));
 
-// 开发测试打包使用
+// 用于开发测试打包
 gulp.task('server', () => {
 	gulpNodemon({
-		script: 'config/server.js',
+		script: 'config/wbt.server.js',
 		ext: 'js art less',
 		watch: [ config.artTemplate.root ],
 		env: {

@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="../assets/styles/test.less" />
-</head>
-<body>
-    这是一个测试而已wqiuedhqwueho,热更新，每一次都重启服务
-</body>
-</html>
+
+{{extend 'component/_layout.art'}}
+{{block 'title'}}首页{{/block}}
+
+{{block 'content'}}
+<p>这是一个测试而已wqiuedhqwueho,热更新，每一次都重启服务</p>
+{{/block}}

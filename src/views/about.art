@@ -1,0 +1,6 @@
+{{extend 'component/_layout.art'}}
+{{block 'title'}}关于我们{{/block}}
+
+{{block 'content'}}
+<p>这里是另外一个路由，调试的时候直接输入定义的路由就可以跳转了哟！</p>
+{{/block}}

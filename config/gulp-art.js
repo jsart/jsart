@@ -5,6 +5,8 @@ const gulpUtil = require('gulp-util');
 const ext = gulpUtil.replaceExtension;
 const PluginError = gulpUtil.PluginError;
 
+const config = require('./wbt.config');
+
 module.exports = function(options) {
 	options = options || {};
 
@@ -21,7 +23,8 @@ module.exports = function(options) {
 				data = options[opt].data;
 			}
 		}
-		const tpl = template.render(file.contents.toString(), data);
+		data.headStylesSuffix = 'css';
+		const tpl = template.render(file.contents.toString(), data, config.artTemplate);
 
 		file.path = ext(file.path, '.html');
 		file.contents = new Buffer(tpl);

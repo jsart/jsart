@@ -1,10 +1,12 @@
-// 引入依赖
+// 引入npm资源
 const path = require('path');
 const Koa = require('koa');
 const static = require('koa-static');
 const route = require('koa-route');
 const loader = require('loader-koa');
 const render = require('koa-art-template');
+
+// 引入配置/路由文件
 const appMainRoute = require('./wbt.route');
 const config = require('./wbt.config');
 
@@ -15,7 +17,6 @@ render(app, config.artTemplate);
 console.log('art template loading...');
 
 const rootPath = config.artTemplate.root;
-
 app.use(loader.less(rootPath));
 app.use(static(rootPath));
 console.log('static file loading...');
