@@ -80,9 +80,7 @@ const appMainRoute = [
         // art模板文件名，默认查找wbt.config.js中设置的art文件指向目录中的art文件
 		name: 'home', 
         // art模板使用数据，自行require
-		data: shareData,
-        // 输出art文件为html时重命名
-		outRename: 'index'
+		data: shareData
 	}
 ];
 ```
