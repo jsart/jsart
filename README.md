@@ -1,6 +1,15 @@
 # WebsiteBuilderTools
 基于art-template模板引擎的前端网站开发构建小工具，开发支持实时热更新
 
+## Demo
+点击这里查看简单的Demo 
+- [WebsiteBuilderTools Demo Home](http://htmlpreview.github.io/?https://github.com/qc-web-y/WebsiteBuilderTools/blob/master/dist/views/home.html)
+- [WebsiteBuilderTools Demo About](http://htmlpreview.github.io/?https://github.com/qc-web-y/WebsiteBuilderTools/blob/master/dist/views/about.html)
+
+> 1.请不要点击导航菜单，因为demo的路径是相对于站点路径的，如需正常查看demo，建议直接下载项目后运行
+
+> 2.Demo是经过项目编译后的html代码，因此不是art模板哟！
+
 ## 使用指南
 - 将项目下载保存到本地
 - 使用 npm 安装依赖： `npm i`
