@@ -1,0 +1,25 @@
+// out:false
+.diy_header { position: fixed; top: 0; left: 0; padding: 10px; width: 100%; min-height:40px; background-color: #563d7c; box-shadow: 0 5px 1px rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1); color: #ffffff; }
+.diy_nav { margin: 20px 0; padding: 0 20px; height: 40px; line-height: 40px; border: 1px solid #563d7c;
+    .diy_link { padding: 0 20px; 
+        &.act { background-color: #563d7c; color: #ffffff; }
+    }
+}
+.diy_con { padding-top:80px; padding-bottom:100px; line-height: 45px; }
+.diy_footer { position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; line-height: 80px; border-top: 1px solid #563d7c; background-color: #ffffff; }
+.diy_cRed { padding: 0 5px; color: #ff0000; }
+.diy_cBlue { padding: 0 5px; color: #0029ff; }
+
+@media (max-width:960px) {
+    @rem:100rem;
+  .diy_header { padding: 10/@rem; box-shadow: 0 5/@rem 1/@rem rgba(0,0,0,.05), inset 0 -1/@rem 0 rgba(0,0,0,.1); }
+  .diy_nav { margin: 20/@rem 0; padding: 0 20/@rem; height: 65/@rem; line-height: 65/@rem; border-width: 2/@rem;
+    .diy_link { padding: 10/@rem 25/@rem; }
+  }
+  .diy_con { padding-top:100/@rem; padding-bottom: 120/@rem; line-height: 45/@rem; }
+  .diy_footer { height: 100/@rem; line-height: 80/@rem; border-width: 2/@rem; }
+  .diy_cRed { padding: 0 10/@rem; }
+  .diy_cBlue { padding: 0 10/@rem;}
+}
+
+

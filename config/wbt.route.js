@@ -4,14 +4,12 @@ const appMainRoute = [
 	{
 		path: '/',
 		name: 'home',
-		data: shareData,
-		outRename: 'testHome'
+		data: shareData
 	},
 	{
 		path: '/about',
 		name: 'about',
-		data: shareData,
-		outRename: 'testHome'
+		data: shareData
 	}
 ];
 

@@ -33,7 +33,10 @@ gulp.task('clean-dist', (done) => {
 gulp.task('art', () => {
 	const artPath = path.join(config.artTemplate.root, config.fileList.art);
 	const htmlOutPath = path.join(config.output.file, config.fileList.art);
-	return gulp.src(artPath + '/*.art').pipe(gulpArt(appMainRoute)).pipe(gulp.dest(htmlOutPath));
+	return gulp
+		.src(artPath + '/*.art')
+		.pipe(gulpArt({ routerConfig: appMainRoute, artConfig: config.artTemplate, headStylesSuffix: 'css' }))
+		.pipe(gulp.dest(htmlOutPath));
 });
 
 // 编译less样式为css
