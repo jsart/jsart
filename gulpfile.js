@@ -5,6 +5,7 @@ const gulpLess = require('gulp-less');
 const gulpUglify = require('gulp-uglify');
 const gulpMinifyCSS = require('gulp-minify-css');
 const gulpNodemon = require('gulp-nodemon');
+const gulpImageMin = require('gulp-imagemin');
 const browserSync = require('browser-sync');
 const del = require('del');
 
@@ -60,8 +61,15 @@ gulp.task('script', () => {
 	return gulp.src(jsPath + '/*.js').pipe(gulpUglify()).pipe(gulp.dest(jsOutPath));
 });
 
+// 压缩图片
+gulp.task('img', () => {
+	const jsPath = returnStaticPath(config.fileList.img, 'source');
+	const jsOutPath = returnStaticPath(config.fileList.img, 'output');
+	return gulp.src(jsPath + '/*.*').pipe(gulpImageMin({ progressive: true })).pipe(gulp.dest(jsOutPath));
+});
+
 // 打包
-gulp.task('build', gulp.series('clean-dist', gulp.parallel('art', 'less', 'css', 'script')));
+gulp.task('build', gulp.series('clean-dist', gulp.parallel('art', 'less', 'css', 'script', 'img')));
 
 // 用于开发测试打包
 gulp.task('server', () => {

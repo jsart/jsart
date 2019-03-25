@@ -15,5 +15,13 @@
         demo使用了我的布局框架<span class="diy_cRed">{{relation.layout}}</span>，有喜欢的可以前往这里查看
         <a class="txt-h5" href="relation.website">{{relation.website}}</a>
     </p>
+    <ul class="diy_img txt-c">
+        <li>
+            <img src="../assets/images/wbt.jpg" alt="WebsiteBuilderTools">
+        </li>
+        <li>
+            <a class="txt-samll" href="https://github.com/qc-web-y/WebsiteBuilderTools">https://github.com/qc-web-y/WebsiteBuilderTools</a>
+        </li>
+    </ul>
 </div>
 {{/block}}
