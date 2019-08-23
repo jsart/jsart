@@ -1,7 +1,8 @@
+// 导入art模板数据
 const shareData = require('../src/data/share');
 
-const appMainRoute = [
-	{
+// 配置开发路由
+const appMainRoute = [{
 		path: '/',
 		name: 'home',
 		data: shareData

@@ -1,23 +1,29 @@
 # WebsiteBuilderTools
-基于art-template模板引擎的前端网站开发构建小工具，开发支持实时热更新
+
+前端模板引擎开发编译器，用于前端开发静态页面时提供服务、路由、art 模板引擎等功能以便于开发调试。
+（重要：工具更新，当前 2.0.0 版本，文档还来不及更新，请耐心等待一下哈...）
 
 ## Demo
-点击这里查看简单的Demo 
+
+点击这里查看简单的 Demo
+
 - [WebsiteBuilderTools Demo Home](http://htmlpreview.github.io/?https://github.com/qc-web-y/WebsiteBuilderTools/blob/master/dist/views/home.html)
 - [WebsiteBuilderTools Demo About](http://htmlpreview.github.io/?https://github.com/qc-web-y/WebsiteBuilderTools/blob/master/dist/views/about.html)
 
-> 1.请不要点击导航菜单，因为demo的路径是相对于站点路径的，如需正常查看demo，建议直接下载项目后运行
+> 1.请不要点击导航菜单，因为 demo 的路径是相对于站点路径的，如需正常查看 demo，建议直接下载项目后运行
 
-> 2.Demo是经过项目编译后的html代码，因此不是art模板哟！
+> 2.Demo 是经过项目编译后的 html 代码，开发时使用 art 模板引擎进行开发，方便开发者进行调试和组件化开发！
 
 ## 使用指南
+
 - 将项目下载保存到本地
 - 使用 npm 安装依赖： `npm i`
-- 项目开发测试运行： `npm run dev` （需要实时热更新运行：`npm run dev:hot`）
-- 项目打包输出运行：`npm run build` 
-- 开始编辑，.art文件语法请参考[art-template模板引擎官网文档](http://aui.github.io/art-template/zh-cn)
+- 项目开发测试运行： `npm run dev`
+- 项目打包输出运行：`npm run build`
+- 开始编辑，.art 文件语法请参考[art-template 模板引擎官网文档](http://aui.github.io/art-template/zh-cn)
 
 ## 目录说明
+
 ```
 > -- src // 开发目录
 >   -- assets // 静态资源存放
@@ -44,27 +50,33 @@
 ```
 
 ## 配置文档
+
 > wbt.config.js （主要配置）
 
 - artTemplate： [art-template](http://aui.github.io/art-template/zh-cn) 模板引擎选项配置，参考[官方文档](http://aui.github.io/art-template/zh-cn/docs/options.html)
 
 - fileList： 文件清单，填写相对于`src`开发目录的路径，如：
+
 ```
  {
     art: 'views', // 表示 art 模板文件所在目录指向：src/views
     img: 'assets/images', // 表示图片文件所在目录指向：src/assets/images
 }
 ```
+
 - output： 输出配置
+
 ```
 {
   file: path.join('dist') // 打包输出的文件路径，使用相对路径
 }
 ```
+
 - devServer： 开发服务配置
+
 ```
 {
-    host: 'localhost', 
+    host: 'localhost',
     port: '8084'
 }
 ```
@@ -76,15 +88,11 @@ const shareData = require('../src/data/share');
 const appMainRoute = [
 	{
         // 路由路径
-		path: '/',  
+		path: '/',
         // art模板文件名，默认查找wbt.config.js中设置的art文件指向目录中的art文件
-		name: 'home', 
+		name: 'home',
         // art模板使用数据，自行require
 		data: shareData
 	}
 ];
 ```
-
-
-
-

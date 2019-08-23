@@ -4,102 +4,80 @@ const gulp = require('gulp');
 const gulpLess = require('gulp-less');
 const gulpUglify = require('gulp-uglify');
 const gulpMinifyCSS = require('gulp-minify-css');
-const gulpNodemon = require('gulp-nodemon');
 const gulpImageMin = require('gulp-imagemin');
-const browserSync = require('browser-sync');
 const del = require('del');
-
-// 引入配置文件
-const gulpArt = require('./config/gulp-art');
-const config = require('./config/wbt.config');
-const appMainRoute = require('./config/wbt.route');
+const gulpArt = require('./gulp-plugin/gulp-art');
+const config = require('./config');
 
 // 根据配置文件生成静态文件路径
-const returnStaticPath = (staticPath, pathType) => {
-	var nowFile = '/';
-	if (pathType === 'source') {
-		nowFile = config.artTemplate.root;
-	} else if (pathType === 'output') {
-		nowFile = config.output.file;
+const createPath = (cType) => {
+	var sourcePath, outputPath;
+	var sourceRootPath = config.artTemplate.root;
+	var outputRootPath = config.output.file;
+	if (cType === 'art') {
+		sourcePath = path.join(sourceRootPath, config.artFilePath);
+		outputPath = path.join(outputRootPath, config.artFilePath);
+	} else {
+		sourcePath = path.join(sourceRootPath, config.devServer.assetsFile[cType]);
+		outputPath = path.join(outputRootPath, config.output.assetsFile[cType]);
 	}
-	return path.join(nowFile, staticPath);
+	return {
+		source: sourcePath,
+		output: outputPath
+	};
 };
 
 // 清理输出文件夹
 gulp.task('clean-dist', (done) => {
-	return del([ config.output.file + '/**/*' ], done);
+	return del([config.output.file + '/**/*'], done);
 });
 
-// 编译art模板文+件
+// 编译art模板文件
 gulp.task('art', () => {
-	const artPath = path.join(config.artTemplate.root, config.fileList.art);
-	const htmlOutPath = path.join(config.output.file, config.fileList.art);
+	const artPath = createPath('art');
 	return gulp
-		.src(artPath + '/*.art')
-		.pipe(gulpArt({ routerConfig: appMainRoute, artConfig: config.artTemplate, headStylesSuffix: 'css' }))
-		.pipe(gulp.dest(htmlOutPath));
+		.src(artPath.source + '/*.art')
+		.pipe(gulpArt(config))
+		.pipe(gulp.dest(artPath.output));
 });
 
 // 编译less样式为css
 gulp.task('less', () => {
-	const lessPath = returnStaticPath(config.fileList.style, 'source');
-	const cssOutPath = returnStaticPath(config.fileList.style, 'output');
-	return gulp.src(lessPath + '/*.less').pipe(gulpLess()).pipe(gulpMinifyCSS()).pipe(gulp.dest(cssOutPath));
+	const stylePath = createPath('style');
+	return gulp
+		.src(stylePath.source + '/*.less')
+		.pipe(gulpLess())
+		.pipe(gulpMinifyCSS())
+		.pipe(gulp.dest(stylePath.output));
 });
 
 // 拷贝css样式文件
 gulp.task('css', () => {
-	const cssPath = returnStaticPath(config.fileList.style, 'source');
-	const cssOutPath = returnStaticPath(config.fileList.style, 'output');
-	return gulp.src(cssPath + '/*.css').pipe(gulp.dest(cssOutPath));
+	const stylePath = createPath('style');
+	return gulp
+		.src(stylePath.source + '/*.css')
+		.pipe(gulp.dest(stylePath.output));
 });
 
 // 压缩js文件
 gulp.task('script', () => {
-	const jsPath = returnStaticPath(config.fileList.script, 'source');
-	const jsOutPath = returnStaticPath(config.fileList.script, 'output');
-	return gulp.src(jsPath + '/*.js').pipe(gulpUglify()).pipe(gulp.dest(jsOutPath));
+	const jsPath = createPath('script');
+	return gulp
+		.src(jsPath.source + '/*.js')
+		.pipe(gulpUglify())
+		.pipe(gulp.dest(jsPath.output));
 });
 
 // 压缩图片
 gulp.task('img', () => {
-	const jsPath = returnStaticPath(config.fileList.img, 'source');
-	const jsOutPath = returnStaticPath(config.fileList.img, 'output');
-	return gulp.src(jsPath + '/*.*').pipe(gulpImageMin({ progressive: true })).pipe(gulp.dest(jsOutPath));
+	const imgPath = createPath('img');
+	return gulp
+		.src(imgPath.source + '/*.*')
+		.pipe(gulpImageMin({
+			progressive: true
+		}))
+		.pipe(gulp.dest(imgPath.output));
 });
 
 // 打包
 gulp.task('build', gulp.series('clean-dist', gulp.parallel('art', 'less', 'css', 'script', 'img')));
-
-// 用于开发测试打包
-gulp.task('server', () => {
-	gulpNodemon({
-		script: 'config/wbt.server.js',
-		ext: 'js art less',
-		watch: [ config.artTemplate.root ],
-		env: {
-			NODE_ENV: 'development',
-			DEV_MODE: 'hot'
-		}
-	});
-});
-
-gulp.task('hot', () => {
-	//所需要监听的文件
-	console.log('开启监听');
-	var files = [ 'config/**', config.artTemplate.root + '/**' ];
-	browserSync.init(files, {
-		proxy: 'http://' + config.devServer.host + ':' + config.devServer.port,
-		browser: 'chrome',
-		notify: false
-	});
-
-	gulp.watch(files).on('change', browserSync.reload);
-});
-
-gulp.task(
-	'watch',
-	gulp.parallel('server', 'hot', () => {
-		console.log('Create service successfully! \r\n Hot update startup...');
-	})
-);

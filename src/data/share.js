@@ -1,5 +1,4 @@
 module.exports = {
-	headStylesSuffix: 'less',
 	site: {
 		name: 'WebsiteBuilderTools',
 		version: 'v1.0.0',

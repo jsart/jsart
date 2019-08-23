@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{block 'title'}}My Site{{/block}}</title>
-    {{block 'head'}}
-        <link rel="stylesheet" href="../assets/styles/LayoutSimple.min.css" />
-        <link rel="stylesheet" href="../assets/styles/demo.{{headStylesSuffix}}" />
-    {{/block}}
-</head>
-<body>
-    {{include 'component/_header.art' data}}
-    {{block 'content'}}{{/block}}
-    {{include 'component/_footer.art' data}}
-</body>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{{block 'title'}}My Site{{/block}}</title>
+        {{block 'head'}}
+        <link rel="stylesheet" href="../{{assetsPath.style}}/LayoutSimple.min.css" />
+        <link rel="stylesheet" href="../{{assetsPath.style}}/demo{{headStylesSuffix}}" />
+        {{/block}}
+    </head>
+
+    <body>
+        {{include 'component/_header.art' data}}
+        {{block 'content'}}{{/block}}
+        {{include 'component/_footer.art' data}}
+    </body>
+
 </html>
-    
