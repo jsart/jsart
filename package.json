@@ -1,30 +1,32 @@
 {
-	"name": "website-builder-tools",
-	"version": "v2.0.0",
-	"description": "前端模板引擎开发编译器，用于前端开发静态页面时提供服务、路由、art模板引擎等功能以便于开发调试。",
-	"private": true,
-	"scripts": {
-		"dev": "set NODE_ENV=development && node server.js",
-		"build": "set NODE_ENV=production && gulp build"
-	},
-	"author": "qckj",
-	"license": "ISC",
-	"dependencies": {},
-	"devDependencies": {
-		"gulp": "^4.0.0",
-		"art-template": "^4.13.2",
-		"del": "^4.0.0",
-		"gulp-art": "0.0.1",
-		"gulp-imagemin": "^5.0.3",
-		"gulp-less": "^4.0.1",
-		"gulp-minify-css": "^1.2.4",
-		"gulp-uglify": "^3.0.2",
-		"gulp-watch": "^5.0.1",
-		"koa": "^2.7.0",
-		"koa-art-template": "^1.1.1",
-		"koa-route": "^3.2.0",
-		"koa-static": "^5.0.0",
-		"loader-koa": "^2.0.1",
-		"path": "^0.12.7"
-	}
+  "name": "webpack-art-template",
+  "version": "v2.0.0",
+  "description": "前端模板引擎开发编译器，用于前端开发静态页面时提供服务、路由、art模板引擎等功能以便于开发调试。",
+  "private": true,
+  "scripts": {
+    "serve": "cross-env MODE_TYPE=development node config/dev.server.js",
+    "build": "cross-env MODE_TYPE=production webpack --config config/webpack.config.js"
+  },
+  "author": "YanEr、",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "art-html-loader": "^0.1.1",
+    "babel-loader": "^8.0.6",
+    "chalk": "^3.0.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "cross-env": "^6.0.3",
+    "express": "^4.17.1",
+    "extract-loader": "^3.1.0",
+    "file-loader": "^5.0.2",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
+    "webpack-hot-middleware": "^2.25.0",
+    "webpack-merge": "^4.2.2"
+  }
 }
