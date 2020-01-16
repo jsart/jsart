@@ -38,7 +38,7 @@ app.use(express.static(outPath))
 // 创建开发路由
 devRoute.forEach(route => {
   app.get(route.path, (req, res, next) => {
-    const filename = path.join(outPath, route.views + '.html');
+    const filename = path.join(outPath, route.views + '.html')
     compiler.outputFileSystem.readFile(filename, (err, result) => {
       if (err) return (next(err))
       res.set('content-type', 'text/html')
@@ -47,7 +47,7 @@ devRoute.forEach(route => {
     })
   })
   log(chalk.green('[WebsiteBuilderTools] - 路由创建成功！'))
-});
+})
 
 app.listen(port)
 

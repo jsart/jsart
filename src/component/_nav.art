@@ -1,11 +1,11 @@
 <nav class="diy_nav">
-    <span class="txt-h5">导航菜单：</span>
-    <% for(var i in link){ %>
-    <% var isAct = i === page %>
-    {{if isAct}}
-    <a class="diy_link txt-h5 act" href="<%= link[i] %>"><%= i %></a>
-    {{else}}
-        <a class="diy_link txt-h5" href="<%= link[i] %>"><%= i %></a>
-        {{/if}}
-        <% } %>
+  <span class="txt-h5">导航菜单：</span>
+  <% for(var i in link){ %>
+  <% var isAct = i === page %>
+  {{if isAct}}
+  <a class="diy_link txt-h5 act" href="<%= link[i] %>"><%= i %></a>
+  {{else}}
+  <a class="diy_link txt-h5" href="<%= link[i] %>"><%= i %></a>
+  {{/if}}
+  <% } %>
 </nav>

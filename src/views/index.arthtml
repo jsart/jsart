@@ -6,7 +6,7 @@
     <% var navData = {page:"home",link: nav} %>
     {{include './component/_nav.art' navData}}
     <h3>
-      欢迎来到
+      欢迎来到555
       <span class="diy_cRed">{{site.name}} - {{site.version}}</span>
       的Home
     </h3>
@@ -30,7 +30,10 @@
 </template>
 
 <script>
+  const comp_header = './component/_header.art'
+  const comp_footer = './component/_footer.art'
   return {
+    artHot: [comp_header, comp_footer],
     importData: './data',
     data: {
       name: 'test'

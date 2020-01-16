@@ -1,6 +1,6 @@
 <footer class="diy_footer jumbotron txt-samll txt-c">
-    这里是放底部内容，比如：
-    <span>{{site.name}} {{site.version}}</span>
-    在线地址：
-    <a href="">{{site.website}}</a>
+  这里是放底部内容，比如：
+  <span>{{site.name}} {{site.version}}</span>
+  在线地址：
+  <a href="">{{site.website}}</a>
 </footer>
