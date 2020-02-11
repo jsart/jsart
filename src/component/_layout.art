@@ -6,13 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{{block 'title'}}My Site{{/block}}</title>
-  <link rel="stylesheet" href="../assets/styles/demo.less" />
+  <PRIVATE_STYLES_PATH/>
+  <PRIVATE_CREATED/>
 </head>
 
 <body>
   {{include './_header.art' data}}
   {{block 'content'}}{{/block}}
   {{include './_footer.art' data}}
+  <PRIVATE_MOUNTED/>
 </body>
 
 </html>

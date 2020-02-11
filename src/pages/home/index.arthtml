@@ -6,23 +6,27 @@
     <% var navData = {page:"home",link: nav} %>
     {{include './component/_nav.art' navData}}
     <h3>
-      欢迎来到555
-      <span class="diy_cRed">{{site.name}} - {{site.version}}</span>
+      欢迎来到
+      <span class="diy_cRed">{{ site.name }} - {{ site.version }}</span>
       的Home
     </h3>
     <p class="txt-h5">这里是home的内容，你可以自我发挥，你高兴好了！</p>
     <p class="txt-h5">
       demo使用了我的布局框架
-      <span class="diy_cRed">{{relation.layout}}</span>，有喜欢的可以前往这里查看
-      <a class="txt-h5" href="relation.website">{{relation.website}}</a>
+      <span class="diy_cRed">{{ relation.layout }}</span
+      >，有喜欢的可以前往这里查看
+      <a class="txt-h5" href="relation.website">{{ relation.website }}</a>
     </p>
     <ul class="diy_img txt-c">
       <li>
         <img src="../assets/images/wbt.jpg" alt="WebsiteBuilderTools" />
       </li>
       <li>
-        <a class="txt-samll"
-          href="https://github.com/qc-web-y/WebsiteBuilderTools">https://github.com/qc-web-y/WebsiteBuilderTools</a>
+        <a
+          class="txt-samll"
+          href="https://github.com/qc-web-y/WebsiteBuilderTools"
+          >https://github.com/qc-web-y/WebsiteBuilderTools</a
+        >
       </li>
     </ul>
   </div>
@@ -30,11 +34,8 @@
 </template>
 
 <script>
-  const comp_header = './component/_header.art'
-  const comp_footer = './component/_footer.art'
   return {
-    artHot: [comp_header, comp_footer],
-    importData: './data',
+    importData: '../../data',
     data: {
       name: 'test'
     }

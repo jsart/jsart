@@ -1,0 +1,15 @@
+const aboutTpl = require('./index.art')
+const shareData = require('../../data')
+module.exports = {
+  name: 'about',
+  styles: ['./index.less', './styles.less'],
+  // styles: './index.less',
+  template: aboutTpl,
+  data: Object.assign(shareData, {
+    name: 'test'
+  }),
+  mounted(windows) {
+    console.log('测试文字')
+  },
+  created(windows) {}
+}
