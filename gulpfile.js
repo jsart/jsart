@@ -13,6 +13,7 @@ const config = require('./config')
 
 const develop = config.develop
 const output = config.output.path
+const devServer = config.devServer
 const matchOut = output + '/**/*'
 const jsart = develop + '/**/*.jsart'
 
@@ -83,7 +84,7 @@ gulp.task(
 
 // [development] 监听任务
 gulp.task('watch', done => {
-  const watchOpt = { delay: 500 }
+  const watchOpt = { delay: devServer.hotDelay }
   const devDir = develop + '/**/*'
   gulp.watch(devDir + '.less', watchOpt, gulp.series('less'))
   gulp.watch(devDir + '.art', watchOpt, gulp.series('build'))
@@ -99,7 +100,7 @@ gulp.task('watch', done => {
 gulp.task('server', done => {
   gulpConnect.server({
     root: './' + output,
-    port: 8082,
+    port: devServer.port,
     livereload: true
   })
   done()

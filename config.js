@@ -4,5 +4,9 @@ module.exports = {
     path: 'dist',
     assetsPath: 'assets'
   },
-  mode: 'development'
+  mode: 'development',
+  devServer: {
+    hotDelay: 500,
+    port: 8082
+  }
 }
