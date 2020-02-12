@@ -1,1 +1,1 @@
-windows,console.log("测试文字");
+window,console.log("测试文字555");

@@ -4,6 +4,7 @@
   "description": "前端模板引擎开发编译器，用于前端开发静态页面时提供服务、路由、art 模板引擎等功能以便于开发调试。\r （重要：工具更新，当前 2.0.0 版本，文档还来不及更新，请耐心等待一下哈...）\r > [项目暂停] 原因： 无法实现开发时实时热重载更新，分析学习webpack源码、了解ES6与Node，暂停开发一周",
   "main": "index.js",
   "scripts": {
+    "dev": "gulp dev",
     "build": "gulp build"
   },
   "keywords": [],
@@ -14,6 +15,7 @@
     "chalk": "^3.0.0",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0",
     "gulp-html-beautify": "^1.0.1",
     "gulp-htmlmin": "^5.0.1",
     "gulp-imagemin": "^7.1.0",
@@ -23,6 +25,10 @@
     "gulp-util": "^3.0.8",
     "less": "^3.11.1",
     "merge": "^1.2.1",
-    "through": "^2.3.8"
+    "require-reload": "^0.2.2",
+    "through2": "^3.0.1"
+  },
+  "dependencies": {
+    "require-from-string": "^2.0.2"
   }
 }

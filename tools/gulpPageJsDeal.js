@@ -5,6 +5,7 @@ const merge = require('merge')
 const through2 = require('through2')
 const gulpUtil = require('gulp-util')
 const chalk = require('chalk')
+const requireFromString = require('require-from-string')
 
 const log = console.log
 const ext = gulpUtil.replaceExtension
@@ -21,12 +22,12 @@ const propsFormat = {
 const defaultOptions = {
   develop: 'src', // 开发目录
   output: {
-    // 输出配置
     path: 'dist', // 输出目录
     assetsPath: 'assets', // 静态文件目录
     assetsPrefix: './' // 静态文件路径前缀，例如用于相对路径与根路径的切换
   },
-  dealMode: 'art' // 当前处理模式，分为art、css、js
+  dealMode: 'art', // 当前处理模式，分为art、css、js、img
+  mode: 'development' // 当前模式 'development' or 'production'
 }
 
 /**
@@ -110,30 +111,53 @@ module.exports = function(options) {
       return cb()
     }
 
-    // [Verify] source格式验证
-    function propsFormatVerify() {
-      const source = require(file.path)
-      const propsVerify = propsTypes(propsFormat, source)
-      if (propsVerify) {
-        this.emit('error', propsVerify)
-        return cb()
-      }
-      return source
+    /**
+     * [Note] file延伸常量
+     * that         -through2.obj处理返回的stream
+     * fileDir      -file文件目录
+     * fileName     -file文件名
+     */
+    const that = this
+    const fileDir = path.dirname(file.path)
+    const fileName = path.basename(file.path)
+
+    /**
+     * [Note] file文件中require引入路径修改为绝对路径
+     * 便于requireFromString可以找到相应的模块
+     */
+    let fileStr = file.contents.toString()
+    const fileReq = fileStr.match(/require\(['|"]\S+['|"]\)/g)
+    fileReq.map((s, i) => {
+      const fileReqPath = s.match(/['|"](\S+)['|"]/)[1]
+      const fileExactReqPath = path
+        .join(fileDir, fileReqPath)
+        .replace(/\\/g, '\\\\')
+      const reqFunc = options.mode === 'development' ? 'reload' : 'require'
+      const fileExactReq = `${reqFunc}('${fileExactReqPath}')`
+      fileStr = fileStr.replace(fileReq[i], fileExactReq)
+    })
+    if (options.mode === 'development') {
+      fileStr =
+        'const reload = require("require-reload")(require)\r\n' + fileStr
     }
 
     /**
-     * [Note] file延伸常量
-     * that      -through2.obj处理返回的stream
-     * source    -file文件内容
-     * fileDir   -file文件目录
-     * fileName  -file文件名
-     * sList     -待处理的样式文件路径集合
-     * jsList    -待处理的js标识与替换匹配字符串集合
+     * [Note] 获取source内容
+     * 并通过propsTypes函数验证其内容格式
      */
-    const that = this
-    const source = propsFormatVerify()
-    const fileDir = path.dirname(file.path)
-    const fileName = path.basename(file.path)
+    const source = requireFromString(fileStr)
+    const propsVerify = propsTypes(propsFormat, source)
+    if (propsVerify) {
+      this.emit('error', propsVerify)
+      return cb()
+    }
+
+    /**
+     * [Note] source延伸常量
+     * name, styles, template, data  -参考props
+     * sList                         -待处理的样式文件路径集合
+     * jsList                        -待处理的js标识与替换匹配字符串集合
+     */
     const { name, styles, template, data } = source
     const sList = typeof styles === 'string' ? [styles] : styles
     const jsList = [
@@ -303,7 +327,7 @@ module.exports = function(options) {
         if (!js) return cb()
 
         // [Note] 传递文件
-        js = `;(function ${js})(windows);`
+        js = `;(function ${js})(window);`
         const jsData = Buffer.from(js)
         const jsOutPath = scriptPathTools(s.name, 'path')
         const jsExactOutPath = path.join(OUTPUT, '..', jsOutPath)

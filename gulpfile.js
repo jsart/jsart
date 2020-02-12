@@ -6,62 +6,110 @@ const gulpLess = require('gulp-less')
 const gulpUglify = require('gulp-uglify')
 const gulpMinifyCSS = require('gulp-minify-css')
 const gulpImageMin = require('gulp-imagemin')
+const gulpConnect = require('gulp-connect')
 const del = require('del')
 const gulpPageJsDeal = require('./tools/gulpPageJsDeal')
 const config = require('./config')
 
 const develop = config.develop
 const output = config.output.path
+const matchOut = output + '/**/*'
+const jsart = develop + '/**/*.jsart'
 
 // 清理输出文件夹
 gulp.task('clean', done => {
-  return del(['dist/**/*'], done)
+  del([matchOut], done)
+  done()
 })
 
 // 编译art模板文件
-gulp.task('art', () => {
-  return gulp
-    .src(develop + '/**/*.jsart')
+gulp.task('art', done => {
+  config.dealMode = 'art'
+  gulp
+    .src(jsart)
     .pipe(gulpPageJsDeal(config))
     .pipe(gulpHtmlMin({ collapseWhitespace: true }))
     .pipe(gulpHtmlBtf({ indent_size: 2 }))
     .pipe(gulp.dest(output))
+    .pipe(gulpConnect.reload())
+  done()
 })
 
 // 处理less文件
-gulp.task('less', () => {
+gulp.task('less', done => {
   config.dealMode = 'css'
-  return gulp
-    .src(develop + '/**/*.jsart')
+  gulp
+    .src(jsart)
     .pipe(gulpPageJsDeal(config))
     .pipe(gulpLess())
     .pipe(gulpMinifyCSS())
     .pipe(gulp.dest(output))
+    .pipe(gulpConnect.reload())
+  done()
 })
 
 // 处理js文件
-gulp.task('js', () => {
+gulp.task('js', done => {
   config.dealMode = 'js'
-  return gulp
-    .src(develop + '/**/*.jsart')
+  gulp
+    .src(jsart)
     .pipe(gulpPageJsDeal(config))
     .pipe(gulpUglify())
     .pipe(gulp.dest(output))
+    .pipe(gulpConnect.reload())
+  done()
 })
 
 // 处理img文件
-gulp.task('img', () => {
+gulp.task('img', done => {
   config.dealMode = 'img'
   const imin = { progressive: true }
-  return gulp
-    .src(develop + '/**/*.jsart')
+  gulp
+    .src(jsart)
     .pipe(gulpPageJsDeal(config))
     .pipe(gulpImageMin(imin))
     .pipe(gulp.dest(output))
+    .pipe(gulpConnect.reload())
+  done()
 })
 
-// 打包
+// 构建
 gulp.task(
   'build',
-  gulp.series('clean', gulp.parallel('art', 'less', 'js', 'img'))
+  gulp.series('clean', gulp.parallel('art', 'less', 'js', 'img'), done => {
+    done()
+  })
+)
+
+// [development] 监听任务
+gulp.task('watch', done => {
+  const watchOpt = { delay: 500 }
+  const devDir = develop + '/**/*'
+  gulp.watch(devDir + '.less', watchOpt, gulp.series('less'))
+  gulp.watch(devDir + '.art', watchOpt, gulp.series('build'))
+  gulp.watch(devDir + '.jsart', watchOpt, gulp.series('build'))
+  gulp.watch(matchOut, watchOpt, done => {
+    gulp.src(matchOut + '.html').pipe(gulpConnect.reload())
+    done()
+  })
+  done()
+})
+
+// [development] 启动服务
+gulp.task('server', done => {
+  gulpConnect.server({
+    root: './' + output,
+    port: 8082,
+    livereload: true
+  })
+  done()
+})
+
+// [development] 开发调试
+gulp.task(
+  'dev',
+  gulp.series('build', gulp.parallel('watch', 'server')),
+  done => {
+    done()
+  }
 )

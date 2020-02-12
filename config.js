@@ -3,5 +3,6 @@ module.exports = {
   output: {
     path: 'dist',
     assetsPath: 'assets'
-  }
+  },
+  mode: 'development'
 }
