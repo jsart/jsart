@@ -1,8 +1,8 @@
 {
-  "name": "website-builder-tools",
-  "version": "2.0.0",
-  "description": "前端模板引擎开发编译器，用于前端开发静态页面时提供服务、路由、art 模板引擎等功能以便于开发调试。\r （重要：工具更新，当前 2.0.0 版本，文档还来不及更新，请耐心等待一下哈...）\r > [项目暂停] 原因： 无法实现开发时实时热重载更新，分析学习webpack源码、了解ES6与Node，暂停开发一周",
-  "main": "index.js",
+  "name": "jsart",
+  "version": "1.0.0",
+  "description": "原 WebsiteBuilderTools2.0 版本，前端静态页面模块化编写工具，基于art模板引擎实现模块化编写前端静态页面，可自动打包引入的js、css、img等文件，自动修改静态资源路径。",
+  "private": true,
   "scripts": {
     "dev": "gulp dev",
     "build": "gulp build"
@@ -15,6 +15,7 @@
     "chalk": "^3.0.0",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
+    "gulp-cli": "^2.2.0",
     "gulp-connect": "^5.7.0",
     "gulp-html-beautify": "^1.0.1",
     "gulp-htmlmin": "^5.0.1",

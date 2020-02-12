@@ -8,7 +8,7 @@ const gulpMinifyCSS = require('gulp-minify-css')
 const gulpImageMin = require('gulp-imagemin')
 const gulpConnect = require('gulp-connect')
 const del = require('del')
-const gulpPageJsDeal = require('./tools/gulpPageJsDeal')
+const gulpPageJsDeal = require('./tools/gulp-jsart')
 const config = require('./config')
 
 const develop = config.develop
