@@ -7,6 +7,7 @@ const gulpUglify = require('gulp-uglify')
 const gulpMinifyCSS = require('gulp-minify-css')
 const gulpImageMin = require('gulp-imagemin')
 const gulpConnect = require('gulp-connect')
+const gulpBabel = require('gulp-babel')
 const del = require('del')
 const gulpPageJsDeal = require('./tools/gulp-jsart')
 const config = require('./config')
@@ -55,6 +56,7 @@ gulp.task('js', done => {
   gulp
     .src(jsart)
     .pipe(gulpPageJsDeal(config))
+    .pipe(gulpBabel())
     .pipe(gulpUglify())
     .pipe(gulp.dest(output))
     .pipe(gulpConnect.reload())
@@ -87,6 +89,7 @@ gulp.task('watch', done => {
   const watchOpt = { delay: devServer.hotDelay }
   const devDir = develop + '/**/*'
   gulp.watch(devDir + '.less', watchOpt, gulp.series('less'))
+  gulp.watch(develop + '/data/**/*.js', watchOpt, gulp.series('build'))
   gulp.watch(devDir + '.art', watchOpt, gulp.series('build'))
   gulp.watch(devDir + '.jsart', watchOpt, gulp.series('build'))
   gulp.watch(matchOut, watchOpt, done => {
