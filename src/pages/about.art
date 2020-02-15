@@ -1,9 +1,15 @@
-{{extend '../../component/_layout.art'}} {{block 'title'}}关于我们{{/block}}
+<import_art_data src="../data" />
+{{extend '../component/_layout.art'}}
+
+{{block 'head'}}
+<title>关于我们</title>
+<link rel="stylesheet" href="@assets/css/styles.less" />
+{{/block}}
 
 {{block 'content'}}
 <div class="jumbotron diy_con">
   <% var navData = {page:"about",link: nav} %>
-  {{include '../../component/_nav.art' navData}}
+  {{include '../component/_nav.art' navData}}
   <h3>
     欢迎来到
     <span class="diy_cRed">{{ site.name }} - {{ site.version }}</span>
@@ -17,16 +23,21 @@
   </p>
   <ul class="diy_img txt-c">
     <li>
-      <PRIVATE_IMG src="@/assets/img/wbt.jpg" alt="WebsiteBuilderTools" />
-      <PRIVATE_IMG alt="WebsiteBuilderTools" />
+      <img src="@assets/img/wbt.jpg" alt="WebsiteBuilderTools" />
+      <img alt="WebsiteBuilderTools" />
     </li>
     <li>
       <a
         class="txt-samll"
         href="https://github.com/qc-web-y/WebsiteBuilderTools"
-        >https://github.com/qc-web-y/WebsiteBuilderTools</a
       >
+        https://github.com/qc-web-y/WebsiteBuilderTools
+      </a>
     </li>
   </ul>
 </div>
+{{/block}}
+
+{{block 'footer'}}
+<script src="@assets/js/main.js"></script>
 {{/block}}

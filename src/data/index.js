@@ -1,15 +1,15 @@
 module.exports = {
   site: {
-    name: 'WebsiteBuilderTools',
+    name: 'WebsiteBuilderTools 测试11',
     version: 'v1.0.0',
     website: 'https://github.com/qc-web-y/WebsiteBuilderTools'
   },
   nav: {
     home: '/',
-    about: '/about'
+    about: '/about.html'
   },
   relation: {
     layout: 'LayoutSimple',
     website: 'https://github.com/qc-web-y/LayoutSimple'
   }
-};
+}
