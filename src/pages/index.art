@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="@assets/css/less.less" />
 <link rel="stylesheet" href="@assets/css/sass.scss" />
 <link rel="stylesheet" href="@assets/css/css.css" />
+<link rel="stylesheet" href="@assets/css/test.css" />
 {{/block}}
 
 {{block 'content'}}

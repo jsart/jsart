@@ -15,58 +15,38 @@ const gulpBabel = require('gulp-babel')
 const gulpRev = require('gulp-rev')
 const gulpIf = require('gulp-if')
 const gulpRevCollector = require('gulp-rev-collector')
+const gulpArt = require('gulp-jsart')
 const del = require('del')
 const chalk = require('chalk')
-const gulpArt = require('gulp-jsart')
 const config = require('../config')
+
+function getRevManifest(assetsList) {
+  return {
+    style: assetsList + '/css',
+    js: assetsList + '/js',
+    img: assetsList + '/img'
+  }
+}
+function isProdMode() {
+  return process.env.MODE_ENV === 'prod'
+}
+function isDevMode() {
+  return process.env.MODE_ENV === 'dev'
+}
 
 const develop = config.develop
 const output = config.output.path
-const assetsList = config.output.assetsList
 const devAssets = path
   .join(develop, config.output.assetsPath)
   .replace(/\\/, '/')
 const outAssets = path.join(output, config.output.assetsPath).replace(/\\/, '/')
+const assetsList = getRevManifest(config.output.assetsList)
 const log = console.log
-let haveAssetsList = false
-
-const isProdMode = () => {
-  return process.env.MODE_ENV === 'prod'
-}
-const isDevMode = () => {
-  return process.env.MODE_ENV === 'dev'
-}
+let assetsTaskEnd = []
 
 // 清理输出文件夹
 gulp.task('clean', done => {
   del([output + '/**/*'], done)
-  done()
-})
-
-// 编译art模板文件
-gulp.task('template:art', done => {
-  const artFile = [develop + '/pages/**/*.art']
-  if (isProdMode()) artFile.unshift(assetsList + '/**/*.json')
-  const rep = { '@assets': './assets' }
-  const revCollOpt = {
-    replaceReved: true,
-    dirReplacements: rep
-  }
-
-  let artOpt
-  if (isDevMode()) {
-    rep['\\.(less|scss)'] = '.css'
-    artOpt = { rep, mode: process.env.MODE_ENV }
-  }
-
-  gulp
-    .src(artFile)
-    .pipe(gulpArt(artOpt))
-    .pipe(gulpIf(isProdMode, gulpRevCollector(revCollOpt)))
-    .pipe(gulpHtmlMin({ collapseWhitespace: true }))
-    .pipe(gulpHtmlBtf({ indent_size: 2 }))
-    .pipe(gulp.dest(output))
-    .pipe(gulpConnect.reload())
   done()
 })
 
@@ -92,8 +72,9 @@ gulp.task('assets:style', done => {
     .pipe(gulpMinifyCSS())
     .pipe(gulp.dest(outAssets))
     .pipe(gulpIf(isProdMode, gulpRev.manifest()))
-    .pipe(gulpIf(isProdMode, gulp.dest(assetsList + '/css')))
+    .pipe(gulpIf(isProdMode, gulp.dest(assetsList.style)))
     .pipe(gulpConnect.reload())
+  assetsTaskEnd.push(assetsList.style)
   done()
 })
 
@@ -106,8 +87,9 @@ gulp.task('assets:js', done => {
     .pipe(gulpIf(isProdMode, gulpRev()))
     .pipe(gulp.dest(outAssets))
     .pipe(gulpIf(isProdMode, gulpRev.manifest()))
-    .pipe(gulpIf(isProdMode, gulp.dest(assetsList + '/js')))
+    .pipe(gulpIf(isProdMode, gulp.dest(assetsList.js)))
     .pipe(gulpConnect.reload())
+  assetsTaskEnd.push(assetsList.js)
   done()
 })
 
@@ -119,17 +101,50 @@ gulp.task('assets:img', done => {
     .pipe(gulpIf(isProdMode, gulpRev()))
     .pipe(gulp.dest(outAssets))
     .pipe(gulpIf(isProdMode, gulpRev.manifest()))
-    .pipe(gulpIf(isProdMode, gulp.dest(assetsList + '/img')))
+    .pipe(gulpIf(isProdMode, gulp.dest(assetsList.img)))
     .pipe(gulpConnect.reload())
+  assetsTaskEnd.push(assetsList.img)
   done()
 })
 
+// 编译art模板文件
+function template_art(cb) {
+  const artFile = [develop + '/pages/**/*.art']
+  if (isProdMode()) artFile.unshift(config.output.assetsList + '/**/*.json')
+  const rep = { '@assets': './assets' }
+  const revCollOpt = {
+    replaceReved: true,
+    dirReplacements: rep
+  }
+
+  let artOpt
+  if (isDevMode()) {
+    rep['\\.(less|scss)'] = '.css'
+    artOpt = { rep, mode: process.env.MODE_ENV }
+  }
+
+  gulp
+    .src(artFile)
+    .pipe(gulpArt(artOpt))
+    .pipe(gulpIf(isProdMode, gulpRevCollector(revCollOpt)))
+    .pipe(gulpHtmlMin({ collapseWhitespace: true }))
+    .pipe(gulpHtmlBtf({ indent_size: 2 }))
+    .pipe(gulp.dest(output))
+    .pipe(gulpConnect.reload())
+  if (cb) cb()
+}
+
 // 检测资产列表目录是否存在
-gulp.task('assets:stat', done => {
-  const assetsListDir = path.join(__dirname, '..', assetsList)
-  fs.exists(assetsListDir, res => {
-    haveAssetsList = res
-    done()
+gulp.task('assets:exist', done => {
+  const wList = Object.keys(assetsList)
+  const watcher = gulp.watch(config.output.assetsList + '/**/*')
+  watcher.on('all', function(event, stats) {
+    if (assetsTaskEnd.length === wList.length) {
+      setTimeout(() => {
+        watcher.close()
+        if (event === 'addDir' || event === 'change') template_art(done)
+      }, 1000)
+    }
   })
 })
 
@@ -138,20 +153,13 @@ gulp.task(
   'build',
   gulp.series(
     'clean',
-    'assets:stat',
-    gulp.parallel('assets:style', 'assets:js', 'assets:img'),
-    'template:art',
+    gulp.parallel('assets:exist', 'assets:style', 'assets:js', 'assets:img'),
     done => {
       done()
-      if (!haveAssetsList) {
-        const msg = `[Tip] 检测到构建前您还没有“${assetsList}”文件，请再次执行构建任务，以确保html文件中的资产路径被正确替换！`
-        log(chalk.yellow(msg))
-      } else {
-        log(chalk.green(`[Tip] 编译完成！`))
-        log(chalk.blue(`[Thank] 感谢使用“jsart”！`))
-        log(chalk.blue(`[Thank] 开发中遇到问题可至点击下方网址进行反馈↓↓↓`))
-        log(chalk.blue(`[Thank] https://github.com/jsart/jsart/issues`))
-      }
+      log(chalk.green(`[Tip] 编译完成！`))
+      log(chalk.blue(`[Thank] 感谢使用“jsart”！`))
+      log(chalk.blue(`[Thank] 开发中遇到问题可至点击下方网址进行反馈↓↓↓`))
+      log(chalk.blue(`[Thank] https://github.com/jsart/jsart/issues`))
     }
   )
 )
