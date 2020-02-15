@@ -6,7 +6,7 @@ module.exports = {
     assetsPath: 'assets',
     assetsList: 'manifest'
   },
-  mode: 'development',
+  // useCssPre: 'less',
   devServer: {
     hotDelay: 500,
     port: 8082,

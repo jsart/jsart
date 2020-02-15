@@ -4,10 +4,12 @@ const path = require('path')
 const gulp = require('gulp')
 const gulpHtmlBtf = require('gulp-html-beautify')
 const gulpHtmlMin = require('gulp-htmlmin')
-const gulpLess = require('gulp-less')
 const gulpUglify = require('gulp-uglify')
 const gulpMinifyCSS = require('gulp-minify-css')
 const gulpImageMin = require('gulp-imagemin')
+const gulpLess = require('gulp-less')
+const gulpSass = require('gulp-sass')
+gulpSass.compiler = require('node-sass')
 const gulpConnect = require('gulp-connect')
 const gulpBabel = require('gulp-babel')
 const gulpRev = require('gulp-rev')
@@ -21,8 +23,10 @@ const config = require('../config')
 const develop = config.develop
 const output = config.output.path
 const assetsList = config.output.assetsList
-const devAssets = path.join(develop, config.output.assetsPath)
-const outAssets = path.join(output, config.output.assetsPath)
+const devAssets = path
+  .join(develop, config.output.assetsPath)
+  .replace(/\\/, '/')
+const outAssets = path.join(output, config.output.assetsPath).replace(/\\/, '/')
 const log = console.log
 let haveAssetsList = false
 
@@ -51,7 +55,7 @@ gulp.task('template:art', done => {
 
   let artOpt
   if (isDevMode()) {
-    rep['.less'] = '.css'
+    rep['\\.(less|scss)'] = '.css'
     artOpt = { rep, mode: process.env.MODE_ENV }
   }
 
@@ -66,12 +70,25 @@ gulp.task('template:art', done => {
   done()
 })
 
-// 处理less文件
-gulp.task('assets:less', done => {
+// 处理style文件
+gulp.task('assets:style', done => {
+  const isLess = () => {
+    return config.useCssPre === 'less'
+  }
+
+  const isSass = () => {
+    return config.useCssPre === 'scss' || config.useCssPre === 'sass'
+  }
+
+  let useCssPre = config.useCssPre || 'css'
+  if (isSass()) useCssPre = '{sass,scss}'
+  const matchStyle = devAssets + '/**/*.' + useCssPre
+
   gulp
-    .src(devAssets + '/**/*.less')
+    .src(matchStyle)
     .pipe(gulpIf(isProdMode, gulpRev()))
-    .pipe(gulpLess())
+    .pipe(gulpIf(isLess, gulpLess()))
+    .pipe(gulpIf(isSass, gulpSass.sync().on('error', gulpSass.logError)))
     .pipe(gulpMinifyCSS())
     .pipe(gulp.dest(outAssets))
     .pipe(gulpIf(isProdMode, gulpRev.manifest()))
@@ -122,7 +139,7 @@ gulp.task(
   gulp.series(
     'clean',
     'assets:stat',
-    gulp.parallel('assets:less', 'assets:js', 'assets:img'),
+    gulp.parallel('assets:style', 'assets:js', 'assets:img'),
     'template:art',
     done => {
       done()

@@ -1,6 +1,5 @@
-const path = require('path')
 const gulp = require('gulp')
-const chalk = require('chalk')
+const merge = require('merge')
 const gulpConnect = require('gulp-connect')
 const config = require('../config')
 
@@ -10,7 +9,6 @@ const output = config.output.path
 const macthDevPath = develop + '/**/*'
 const macthOutPath = output + '/**/*'
 const watchOpt = { delay: devServer.hotDelay }
-const log = console.log
 
 // [development] 刷新html任务
 gulp.task('reload', done => {
@@ -22,7 +20,12 @@ gulp.task('reload', done => {
 gulp.task('watch', done => {
   const macthArtTask = [macthDevPath + '.art', develop + '/data/**/*.js']
   gulp.watch(macthArtTask, watchOpt, gulp.series('template:art'))
-  gulp.watch(macthDevPath + '.less', watchOpt, gulp.series('assets:less'))
+
+  let useCssPre = config.useCssPre || 'css'
+  if (useCssPre === 'scss' || useCssPre === 'sass') useCssPre = '{sass,scss}'
+  const matchStyle = macthDevPath + '.' + useCssPre
+  gulp.watch(matchStyle, watchOpt, gulp.series('assets:style'))
+
   gulp.watch(macthDevPath + '.js', watchOpt, gulp.series('assets:js'))
   gulp.watch(
     macthDevPath + '.{jpg,png,gif}',
@@ -35,12 +38,13 @@ gulp.task('watch', done => {
 
 // [development] 启动服务
 gulp.task('server', done => {
-  gulpConnect.server({
+  const defOpt = {
     root: './' + output,
-    port: devServer.port,
-    host: devServer.host,
     livereload: true
-  })
+  }
+  const opt = merge.recursive(true, defOpt, devServer)
+  delete opt.hotDelay
+  gulpConnect.server(opt)
   done()
 })
 

@@ -3,7 +3,9 @@
 
 {{block 'head'}}
 <title>首页</title>
-<link rel="stylesheet" href="@assets/css/styles.less" />
+<link rel="stylesheet" href="@assets/css/less.less" />
+<link rel="stylesheet" href="@assets/css/sass.scss" />
+<link rel="stylesheet" href="@assets/css/css.css" />
 {{/block}}
 
 {{block 'content'}}

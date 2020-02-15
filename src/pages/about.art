@@ -3,7 +3,6 @@
 
 {{block 'head'}}
 <title>关于我们</title>
-<link rel="stylesheet" href="@assets/css/styles.less" />
 {{/block}}
 
 {{block 'content'}}
