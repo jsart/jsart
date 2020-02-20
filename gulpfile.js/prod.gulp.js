@@ -20,17 +20,17 @@ const del = require('del')
 const chalk = require('chalk')
 const config = require('../config')
 
-function getRevManifest(assetsList) {
+function getRevManifest (assetsList) {
   return {
     style: assetsList + '/css',
     js: assetsList + '/js',
     img: assetsList + '/img'
   }
 }
-function isProdMode() {
+function isProdMode () {
   return process.env.MODE_ENV === 'prod'
 }
-function isDevMode() {
+function isDevMode () {
   return process.env.MODE_ENV === 'dev'
 }
 
@@ -52,13 +52,9 @@ gulp.task('clean', done => {
 
 // 处理style文件
 gulp.task('assets:style', done => {
-  const isLess = () => {
-    return config.useCssPre === 'less'
-  }
+  const isLess = () => config.useCssPre === 'less'
 
-  const isSass = () => {
-    return config.useCssPre === 'scss' || config.useCssPre === 'sass'
-  }
+  const isSass = () => config.useCssPre === 'scss' || config.useCssPre === 'sass'
 
   let useCssPre = config.useCssPre || 'css'
   if (isSass()) useCssPre = '{sass,scss}'
@@ -82,7 +78,7 @@ gulp.task('assets:style', done => {
 gulp.task('assets:js', done => {
   gulp
     .src(devAssets + '/**/*.js')
-    .pipe(gulpBabel({ presets: ['@babel/env'] }))
+    .pipe(gulpBabel({presets: ['@babel/env']}))
     .pipe(gulpUglify())
     .pipe(gulpIf(isProdMode, gulpRev()))
     .pipe(gulp.dest(outAssets))
@@ -97,7 +93,7 @@ gulp.task('assets:js', done => {
 gulp.task('assets:img', done => {
   gulp
     .src(devAssets + '/**/*.{jpg,png,gif}')
-    .pipe(gulpImageMin({ progressive: true }))
+    .pipe(gulpImageMin({progressive: true}))
     .pipe(gulpIf(isProdMode, gulpRev()))
     .pipe(gulp.dest(outAssets))
     .pipe(gulpIf(isProdMode, gulpRev.manifest()))
@@ -108,10 +104,10 @@ gulp.task('assets:img', done => {
 })
 
 // 编译art模板文件
-function template_art(cb) {
+function template_art (cb) {
   const artFile = [develop + '/pages/**/*.art']
   if (isProdMode()) artFile.unshift(config.output.assetsList + '/**/*.json')
-  const rep = { '@assets': './assets' }
+  const rep = {'@assets': './assets'}
   const revCollOpt = {
     replaceReved: true,
     dirReplacements: rep
@@ -120,15 +116,15 @@ function template_art(cb) {
   let artOpt
   if (isDevMode()) {
     rep['\\.(less|scss)'] = '.css'
-    artOpt = { rep, mode: process.env.MODE_ENV }
+    artOpt = {rep, mode: process.env.MODE_ENV}
   }
 
   gulp
     .src(artFile)
     .pipe(gulpArt(artOpt))
     .pipe(gulpIf(isProdMode, gulpRevCollector(revCollOpt)))
-    .pipe(gulpHtmlMin({ collapseWhitespace: true }))
-    .pipe(gulpHtmlBtf({ indent_size: 2 }))
+    .pipe(gulpHtmlMin({collapseWhitespace: true}))
+    .pipe(gulpHtmlBtf({indent_size: 2}))
     .pipe(gulp.dest(output))
     .pipe(gulpConnect.reload())
   if (cb) cb()
@@ -138,7 +134,7 @@ function template_art(cb) {
 gulp.task('assets:exist', done => {
   const wList = Object.keys(assetsList)
   const watcher = gulp.watch(config.output.assetsList + '/**/*')
-  watcher.on('all', function(event, stats) {
+  watcher.on('all', function (event, stats) {
     if (assetsTaskEnd.length === wList.length) {
       setTimeout(() => {
         watcher.close()
@@ -149,10 +145,8 @@ gulp.task('assets:exist', done => {
 })
 
 // 构建
-gulp.task(
-  'build',
-  gulp.series(
-    'clean',
+gulp.task('build',
+  gulp.series('clean',
     gulp.parallel('assets:exist', 'assets:style', 'assets:js', 'assets:img'),
     done => {
       done()
@@ -160,6 +154,4 @@ gulp.task(
       log(chalk.blue(`[Thank] 感谢使用“jsart”！`))
       log(chalk.blue(`[Thank] 开发中遇到问题可至点击下方网址进行反馈↓↓↓`))
       log(chalk.blue(`[Thank] https://github.com/jsart/jsart/issues`))
-    }
-  )
-)
+    }))

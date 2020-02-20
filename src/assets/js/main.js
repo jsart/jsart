@@ -5,12 +5,12 @@ const test = () => {
 }
 
 class Point {
-  constructor(x, y) {
+  constructor (x, y) {
     this.x = x
     this.y = y
   }
 
-  toString() {
+  toString () {
     return '(' + this.x + ', ' + this.y + ')'
   }
 }
