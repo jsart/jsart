@@ -130,18 +130,25 @@ function template_art (cb) {
   if (cb) cb()
 }
 
+gulp.task('template:art', template_art)
+
 // 检测资产列表目录是否存在
 gulp.task('assets:exist', done => {
-  const wList = Object.keys(assetsList)
-  const watcher = gulp.watch(config.output.assetsList + '/**/*')
-  watcher.on('all', function (event, stats) {
-    if (assetsTaskEnd.length === wList.length) {
-      setTimeout(() => {
-        watcher.close()
-        if (event === 'addDir' || event === 'change') template_art(done)
-      }, 1000)
-    }
-  })
+  if (isProdMode()) {
+    const wList = Object.keys(assetsList)
+    const watcher = gulp.watch(config.output.assetsList + '/**/*')
+    watcher.on('all', function (event, stats) {
+      console.log(event)
+      if (assetsTaskEnd.length === wList.length) {
+        setTimeout(() => {
+          watcher.close()
+          if (event === 'addDir' || event === 'change') template_art(done)
+        }, 1000)
+      }
+    })
+  } else {
+    template_art(done)
+  }
 })
 
 // 构建

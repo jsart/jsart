@@ -8,7 +8,7 @@ const develop = config.develop
 const output = config.output.path
 const macthDevPath = develop + '/**/*'
 const macthOutPath = output + '/**/*'
-const watchOpt = { delay: devServer.hotDelay }
+const watchOpt = {delay: devServer.hotDelay}
 
 // [development] 刷新html任务
 gulp.task('reload', done => {
@@ -18,7 +18,7 @@ gulp.task('reload', done => {
 
 // [development] 监听任务
 gulp.task('watch', done => {
-  const macthArtTask = [macthDevPath + '.art', develop + '/data/**/*.js']
+  const macthArtTask = [ macthDevPath + '.art', develop + '/data/**/*.js' ]
   gulp.watch(macthArtTask, watchOpt, gulp.series('template:art'))
 
   let useCssPre = config.useCssPre || 'css'
@@ -27,11 +27,9 @@ gulp.task('watch', done => {
   gulp.watch(matchStyle, watchOpt, gulp.series('assets:style'))
 
   gulp.watch(macthDevPath + '.js', watchOpt, gulp.series('assets:js'))
-  gulp.watch(
-    macthDevPath + '.{jpg,png,gif}',
+  gulp.watch(macthDevPath + '.{jpg,png,gif}',
     watchOpt,
-    gulp.series('assets:img')
-  )
+    gulp.series('assets:img'))
   gulp.watch(macthOutPath, gulp.series('reload'))
   done()
 })
@@ -49,8 +47,6 @@ gulp.task('server', done => {
 })
 
 // [development] 开发调试
-gulp.task(
-  'dev',
+gulp.task('dev',
   gulp.series('build', gulp.parallel('watch', 'server')),
-  done => done
-)
+  done => done)
